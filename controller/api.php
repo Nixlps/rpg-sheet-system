@@ -1,6 +1,6 @@
 <?php
-  include './controller/login-system.php';
-  include './controller/jwt.php';
+  include '../model/login-db.php';
+  include './jwt.php';
 
   header('Access-Control-Allow-Origin: *');
   header('Access-Control-Allow-Headers: *');
@@ -11,7 +11,7 @@
   $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
   $uri = explode('/', $uri);
 
-  $action = $uri[3];
+  $action = $uri[4];
 
   $bearer_token = get_bearer_token();
   $is_jwt_valid = isset($bearer_token) ? is_jwt_valid($bearer_token) : false;

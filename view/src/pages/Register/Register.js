@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
+import { AUTH_API } from "../../constants";
 
 import './Register.scss';
 
@@ -21,7 +22,7 @@ function Register(){
   
   async function registerRequest() {
     try {
-      const response = await fetch('http://localhost/rpg-sheet-system/api.php/register', {
+      const response = await fetch(AUTH_API, {
         method: 'POST',
         body: JSON.stringify({
           username: newUserData.username,
