@@ -1,0 +1,59 @@
+.error-login{
+  margin-bottom: 1rem;
+  font-size: 0.8rem;
+  color: rgba(213, 18, 18, 1);
+}
+
+.register-screen{
+  .form{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+  
+    input{
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1.5px solid rgba(211,45,112,1);
+      border-radius: 5px;
+      color: #757575;
+  
+      &:focus{
+        border: 1.5px solid rgba(211,45,112,1);
+      }
+  
+      @media screen and (min-width: 1024px) {
+        font-size: 0.7rem;
+        padding: 10px 15px;
+      }
+    }
+  
+    button{
+      width: 50%;
+      padding: 10px;
+      background: transparent;
+      border: 1.5px solid rgba(211,45,112,1);
+      border-radius: 5px;
+      color: #757575;
+      cursor: pointer;
+      margin-top: 0.5rem;
+  
+      &:hover{
+        background-color: rgba(211,45,112,1);
+        color: rgba(255, 255, 255, 1);
+      }
+  
+      @media screen and (min-width: 1024px) {
+        font-size: 0.7rem;
+        padding: 10px 15px;
+      }
+    }
+  }
+
+  .login-link{
+    font-size: 1rem;
+    &:hover{
+      color: rgb(76, 61, 129);
+    }
+  }
+}
+
