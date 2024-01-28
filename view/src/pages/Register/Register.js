@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 
 import './Register.scss';
@@ -10,27 +11,62 @@ function Register(){
     email: "",
     password: ""
   });
+  const navigate = useNavigate();
   const [checkPassword, setCheckPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  // const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   // const navigate = useNavigate();
 
   const handleChange = e => setNewUserData({...newUserData, [e.target.name]: e.target.value});
   
+  async function registerRequest() {
+    try {
+      const response = await fetch('http://localhost/rpg-sheet-system/api.php/register', {
+        method: 'POST',
+        body: JSON.stringify({
+          username: newUserData.username,
+          password: newUserData.password,
+          email: newUserData.email,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error('Erro na requisição.');
+      }
+  
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        const data = await response.json();
+        if (data.status) {
+          setIsLoading(false);
+          localStorage.setItem('token', data.status);
+          navigate('/');
+        } else {
+          setErrorMessage('Erro ao cadastrar novo usuário :(', console.log(data.status));
+        }
+      } else {
+        throw new Error('Resposta não contém dados JSON válidos.');
+      }
+    } catch (error) {
+      console.error('Erro:', error.message);
+    }
+  }
+
   const handleSubmit = e => {
     e.preventDefault();
     setIsLoading(true);
-    // add validation
-    // send to database
-    setIsLoading(false);
-    // sucess msg, redirect to logged page
+    // form validation
+    registerRequest();
   }
 
   return(
     <div className="register-screen">
       {isLoading ? <LoadingSpinner /> : <></>}
       
-      {/* {errorMessage && <div className="error-login">{errorMessage}</div>} */}
+      {errorMessage && <div className="error-login">{errorMessage}</div>}
       
       <form className="form" onSubmit={handleSubmit}>
         <input type="text" placeholder="Username" name="username" onChange={handleChange} value={newUserData.username}/>
