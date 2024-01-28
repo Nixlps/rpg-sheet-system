@@ -2,7 +2,7 @@
   include 'db-connection.php';
   include 'sheet.php';
 
-  $connection = new Connection();
+  // $connection = new Connection();
   $characterSheet = new Sheet($connection);
 
   if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['addCharacter'])) {
