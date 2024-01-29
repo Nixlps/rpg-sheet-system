@@ -6,6 +6,9 @@ import App from './App';
 // Routes
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
+import Home from "./pages/Home/Home";
+import Confirmation from './pages/Confirmation/Confirmation';
+import ResetPassword from './pages/ResetPassword/ResetPassword';
 
 const router = createBrowserRouter([
   {
@@ -20,7 +23,19 @@ const router = createBrowserRouter([
       {
         path: "/cadastro",
         element: <Register />
-      }
+      },
+      {
+        path: "/home",
+        element: <Home />
+      },
+      {
+        path: "/confirmacao",
+        element: <Confirmation />
+      },
+      {
+        path: "recuperar-senha",
+        element: <ResetPassword />
+      },
     ]
   },
 ]);

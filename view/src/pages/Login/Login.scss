@@ -49,10 +49,16 @@
     }
   }
 
-  .login-link{
-    font-size: 1rem;
-    &:hover{
-      color: rgb(76, 61, 129);
+  .login-links{
+    display: flex;
+    flex-direction: column;
+    a{
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      color: inherit;
+      &:hover{
+        color: rgb(52, 24, 153);
+      }
     }
   }
 }

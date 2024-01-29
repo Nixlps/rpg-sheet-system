@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
-import { AUTH_API } from "../../constants";
+import { AUTH_API_REGISTER } from "../../constants";
 
 import './Register.scss';
 
@@ -12,8 +12,8 @@ function Register(){
     email: "",
     password: ""
   });
-  const navigate = useNavigate();
   const [checkPassword, setCheckPassword] = useState(false);
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   // const navigate = useNavigate();
@@ -22,7 +22,7 @@ function Register(){
   
   async function registerRequest() {
     try {
-      const response = await fetch(AUTH_API, {
+      const response = await fetch(AUTH_API_REGISTER, {
         method: 'POST',
         body: JSON.stringify({
           username: newUserData.username,
@@ -43,7 +43,7 @@ function Register(){
         const data = await response.json();
         if (data.status) {
           setIsLoading(false);
-          localStorage.setItem('token', data.status);
+          localStorage.setItem('token_rpg_status', data.status);
           navigate('/');
         } else {
           setErrorMessage('Erro ao cadastrar novo usuário :(', console.log(data.status));
