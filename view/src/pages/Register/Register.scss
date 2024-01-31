@@ -1,14 +1,17 @@
-.error-login{
-  margin-bottom: 1rem;
-  font-size: 0.8rem;
-  color: rgba(213, 18, 18, 1);
-}
-
 .register-screen{
   .form{
     display: flex;
     flex-direction: column;
     margin-bottom: 1rem;
+    position: relative;
+
+    .error-login{
+      margin-bottom: 1rem;
+      font-size: 0.8rem;
+      color: rgba(213, 18, 18, 1);
+      position: absolute;
+      top: -40px;
+    }    
   
     input{
       padding: 10px;
@@ -50,7 +53,7 @@
   }
 
   .login-link{
-    font-size: 1rem;
+    font-size: 0.8rem;
     &:hover{
       color: rgb(76, 61, 129);
     }

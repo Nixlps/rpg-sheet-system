@@ -1,6 +1,6 @@
 <?php
   include '../model/database.php';
-  // include '../model/send-email.php';
+  include '../model/send-email.php';
   include './jwt.php';
 
   header('Access-Control-Allow-Origin: *');
@@ -35,7 +35,7 @@
     if ($user_id = $database->register($user)) {
       $user['id'] = $user_id;
       if ($code = $database->generateConfirmCode($user_id)) {
-          // sendConfirmationEmail($user['email'], $code);
+          sendConfirmationCode($user['username'], $user['email'], $code);
           $headers = ['alg' => 'HS256', 'typ' => 'JWT'];
           $payload = ['user' => $user];
           $jwt = generate_jwt($headers, $payload);
@@ -44,7 +44,7 @@
           echo json_encode(['error' => 'Erro ao gerar o código de confirmação']);
       }
     } else {
-        echo json_encode(['error' => 'Erro no registro do usuário']);
+        echo json_encode(['error' => 'Usuário já cadastrado']);
     }
   } elseif ($action === 'confirm') {
       if ($is_jwt_valid) {
@@ -64,12 +64,16 @@
   } elseif ($action === 'login') {
       $rest_json = file_get_contents('php://input');
       $_POST = json_decode($rest_json, true);
-      if ( $user = $database->loginUser( $_POST['username'], md5($_POST['password']))) {
-        error_log('Dados do usuário de login ' . $user);
-        $headers = ['alg' => 'HS256', 'typ' => 'JWT'];
-        $payload = ['user' => $user];
-        $jwt = generate_jwt($headers, $payload);
-        echo json_encode(['status' => $jwt]);
+      if ( $user = $database->loginUser( $_POST['login'], md5($_POST['password']))) {
+        if($user['status'] === 0){
+          echo json_encode(['status' => 0, 'error' => 'Conta não verificada. Entre no seu email para confirmar.']);
+        }
+        else{
+          $headers = ['alg' => 'HS256', 'typ' => 'JWT'];
+          $payload = ['user' => $user];
+          $jwt = generate_jwt($headers, $payload);
+          echo json_encode(['status' => $jwt]);
+        }
       }else {
         echo json_encode(['status' => 0, 'error' => 'Falha ao autenticar o login']);
       }

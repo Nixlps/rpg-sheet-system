@@ -3,6 +3,8 @@ import { useNavigate, Link } from "react-router-dom";
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 
 import './Login.scss';
+import OpenEye from '../../../assets/icons/eye-open.svg';
+import CloseEye from '../../../assets/icons/eye-close.svg';
 
 import { AUTH_API_LOGIN } from "../../constants";
 
@@ -14,15 +16,20 @@ function Login(){
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = e => {setUserData({...userData, [e.target.name]: e.target.value})}
+
+  const handleTogglePassword = () => {
+    setShowPassword(!showPassword);
+  };
 
   async function loginRequest() {
     try {
       const response = await fetch(AUTH_API_LOGIN, {
         method: 'POST',
         body: JSON.stringify({
-          username: userData.login,
+          login: userData.login,
           password: userData.password,
         }),
         headers: {
@@ -42,7 +49,8 @@ function Login(){
           localStorage.setItem('token_rpg_login', data.status);
           navigate('/home');
         } else {
-          setErrorMessage('Erro ao logar :(', console.log(data.status));
+          setIsLoading(false);
+          setErrorMessage(data.error);
         }
       } else {
         throw new Error('Resposta não contém dados JSON válidos.');
@@ -66,7 +74,10 @@ function Login(){
       
       <form className="form" onSubmit={handleSubmit} noValidate>
         <input type="text" placeholder="Login (username ou email)" name="login" onChange={handleChange} value={userData.login}/>
-        <input type="text" placeholder="Senha" name="password" onChange={handleChange} value={userData.password}/>
+        <input type={showPassword ? 'text' : 'password'} placeholder="Senha" name="password" onChange={handleChange} value={userData.password}/>
+        <div className="show-hide-password" onClick={handleTogglePassword}>
+          {showPassword ? <OpenEye/> : <CloseEye/>}
+        </div>
         <button type="submit" className="form-button">Login</button>
       </form>
 

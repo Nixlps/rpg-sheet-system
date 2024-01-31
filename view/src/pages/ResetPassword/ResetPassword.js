@@ -115,8 +115,6 @@ function ResetPassword(){
           }
         </div>
       }
-      
-      
 
       <Link to="/" className="login-link">Voltar a página de Login</Link>
     </div>

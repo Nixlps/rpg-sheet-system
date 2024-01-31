@@ -89,12 +89,12 @@
     }
 
     // receives the username and password and returns the desired user
-    public function loginUser($username, $password){
+    public function loginUser($login, $password){
       $this->connection = new mysqli($this->host, $this->username, $this->password, $this->dbname);
       $this->connection->set_charset('utf8');
       
-      $sql = $this->connection->prepare( 'SELECT * FROM `user` WHERE username=? AND password=?' );
-      $sql->bind_param('ss', $username, $password);
+      $sql = $this->connection->prepare( 'SELECT * FROM `user` WHERE username=? OR email=? AND `password`=?' );
+      $sql->bind_param('sss', $login, $login, $password);
       $sql->execute();
       $result = $sql->get_result();
       

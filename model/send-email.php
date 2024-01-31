@@ -1,26 +1,36 @@
 <?php 
-  require '../vendor/autoload.php';
+  use PHPMailer\PHPMailer\PHPMailer;
+  use PHPMailer\PHPMailer\Exception;
 
-  function sendConfirmationEmail($email, $code) {
-    error_log('Email e código: ' . $email . $code);
-    $apiKey = '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';
-    $sendgrid = new \SendGrid($apiKey);
+  require '../vendor/phpmailer/phpmailer/src/Exception.php';
+  require '../vendor/phpmailer/phpmailer/src/PHPMailer.php';
+  require '../vendor/phpmailer/phpmailer/src/SMTP.php';
 
-    $email = new \SendGrid\Mail\Mail();
-    $email->setFrom("no-reply@rpgsheetsys.com", "Nix");
-    $email->setSubject("Confirmação de Cadastro");
-    $email->addTo($email);
-    $email->addContent("text/plain", "Obrigado por se cadastrar! Seu código de confirmação é: $code");
+  function sendConfirmationCode($username, $email_receiver, $code){
+    $mail = new PHPMailer(true);
 
-    try {
-        $response = $sendgrid->send($email);
-        if ($response->statusCode() == 202) {
-            echo "E-mail enviado com sucesso!";
-        } else {
-            echo "Erro ao enviar o e-mail: " . $response->body();
-        }
-    } catch (Exception $e) {
-        echo "Erro ao enviar o e-mail: " . $e->getMessage();
-    }
+    $mail->isSMTP();
+    $mail->Host = 'smtp.gmail.com';
+    $mail->SMTPAuth = true;
+    $mail->Username = 'nix.loar@gmail.com';
+    $mail->Password = 'vebdoosligpwifrh';
+    $mail->SMTPSecure = 'ssl';
+    $mail->Port = 465;
+
+    $mail->setFrom('nix.loar@gmail.com');
+
+    $mail->addAddress($email_receiver);
+
+    $mail->isHTML(true);
+
+    $mail->CharSet = 'UTF-8';
+
+    $confirmation_link = 'http://localhost:8080/confirmacao';
+
+    $mail->Subject = 'Confirmação de Cadastro RPG Sheet System';
+    'Olá,<br><br>Este é o corpo do e-mail.<br><br>Atenciosamente,<br>Seu Nome';
+    $mail->Body = 'Olá, ' . $username . '!' . '<br><br>Obrigada por se cadastrar. Seu código de confirmação é: ' . $code . '<br><br>Para confirmar sua conta, <a href=`' . $confirmation_link .'` target=_blank > clique aqui </a>';
+
+    $mail->send();
   }
 ?>

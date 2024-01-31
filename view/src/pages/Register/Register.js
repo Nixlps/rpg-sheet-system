@@ -8,9 +8,9 @@ import './Register.scss';
 
 function Register(){
   const [newUserData, setNewUserData] = useState({
-    username: "",
-    email: "",
-    password: ""
+    username: '',
+    email: '',
+    password: ''
   });
   const [checkPassword, setCheckPassword] = useState(false);
   const navigate = useNavigate();
@@ -18,9 +18,13 @@ function Register(){
   const [errorMessage, setErrorMessage] = useState('');
   // const navigate = useNavigate();
 
-  const handleChange = e => setNewUserData({...newUserData, [e.target.name]: e.target.value});
+  const handleChange = e => {
+    setErrorMessage('');
+    setNewUserData({...newUserData, [e.target.name]: e.target.value});
+  }
   
   async function registerRequest() {
+    setIsLoading(true);
     try {
       const response = await fetch(AUTH_API_REGISTER, {
         method: 'POST',
@@ -34,7 +38,7 @@ function Register(){
         },
       });
   
-      if (!response.ok) {
+      if (!response.ok) { 
         throw new Error('Erro na requisição.');
       }
   
@@ -46,30 +50,52 @@ function Register(){
           localStorage.setItem('token_rpg_status', data.status);
           navigate('/');
         } else {
-          setErrorMessage('Erro ao cadastrar novo usuário :(', console.log(data.status));
+          setIsLoading(false);
+          setErrorMessage(data.error);
         }
       } else {
         throw new Error('Resposta não contém dados JSON válidos.');
       }
     } catch (error) {
       console.error('Erro:', error.message);
+      setIsLoading(false);
     }
+  }
+
+  const formValidation = () => {
+    
+    if(newUserData.username === '' || newUserData.email === '' || newUserData.password === ''){
+      setErrorMessage('Todos os campos são obrigatórios');
+      return false;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if(!emailRegex.test(newUserData.email)){
+      setErrorMessage('Digite um email válido');
+      return false;
+    }
+
+    if(checkPassword === false){
+      setErrorMessage('As senhas não conferem');
+      return false;
+    }
+    return true;
   }
 
   const handleSubmit = e => {
     e.preventDefault();
-    setIsLoading(true);
-    // form validation
-    registerRequest();
+    if(formValidation()){
+      registerRequest();
+    }
   }
 
   return(
     <div className="register-screen">
       {isLoading ? <LoadingSpinner /> : <></>}
       
-      {errorMessage && <div className="error-login">{errorMessage}</div>}
-      
       <form className="form" onSubmit={handleSubmit}>
+        {errorMessage && <div className="error-login">{errorMessage}</div>}
         <input type="text" placeholder="Username" name="username" onChange={handleChange} value={newUserData.username}/>
         <input type="text" placeholder="Email" name="email" onChange={handleChange} value={newUserData.email}/>
         <input type="text" placeholder="Senha" name="password" onChange={handleChange} value={newUserData.password}/>
