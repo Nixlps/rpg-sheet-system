@@ -22,19 +22,20 @@ function Confirmation(){
           code: code,
         }),
         headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('token_rpg_login'),
+          Authorization: 'Bearer ' + localStorage.getItem('token_rpg_status'),
         },
-      }).then((respose) => {
-        if (respose.ok) {
-          setIsLoading(false);
+      }).then((response) => {
+        setIsLoading(false);
+        console.log(response)
+        if (response.ok) {
           setMainMessage('Confirmação feita com sucesso!');
           setConfirmed(true)
-          return respose.json()
+          return response.json()
         }
         throw new Error('error')
       })
     } catch (error) {
-      console.log(error.message)
+      console.log(error)
     }
   }
 
@@ -58,7 +59,9 @@ function Confirmation(){
         </form>      
       }
 
-      <Link to="/" className="login-link">Voltar a página de Login</Link>
+      <div className="login-links">
+        <Link to="/" className="login-link">Voltar a página de Login</Link>
+      </div>
     </div>
   )
 }

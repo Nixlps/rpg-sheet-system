@@ -70,9 +70,8 @@ function Login(){
     <div className="login-screen">
       {isLoading ? <LoadingSpinner /> : <></>}
       
-      {errorMessage && <div className="error-login">{errorMessage}</div>}
-      
       <form className="form" onSubmit={handleSubmit} noValidate>
+      {errorMessage && <div className="error-login">{errorMessage}</div>}
         <input type="text" placeholder="Login (username ou email)" name="login" onChange={handleChange} value={userData.login}/>
         <input type={showPassword ? 'text' : 'password'} placeholder="Senha" name="password" onChange={handleChange} value={userData.password}/>
         <div className="show-hide-password" onClick={handleTogglePassword}>

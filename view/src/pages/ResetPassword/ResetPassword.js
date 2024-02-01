@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 
@@ -33,11 +33,12 @@ function ResetPassword(){
         headers: {
           'Content-Type': 'application/json',
         },
-      }).then((respose) => {
-        if (respose.ok) {
-          setIsLoading(false);
+      }).then((response) => {
+        setIsLoading(false);
+        if (response.ok) {
+          setConfirmed(true)
           setMainMessage('Enviamos um link de redefinição de senha para seu email.');
-          return respose.json()
+          return response.json()
         }
         throw new Error('error')
       })
@@ -57,11 +58,12 @@ function ResetPassword(){
         headers: {
           'Content-Type': 'application/json',
         },
-      }).then((respose) => {
-        if (respose.ok) {
-          setIsLoading(false);
+      }).then((response) => {
+        setIsLoading(false);
+        if (response.ok) {
+          setConfirmed(true)
           setMainMessage('Senha alterada com sucesso!');
-          return respose.json()
+          return response.json()
         }
         throw new Error('error')
       })
@@ -82,22 +84,18 @@ function ResetPassword(){
     newPasswordRequest();
   }
 
-  useEffect(() => {
-    console.log(token)
-  }, [])
-
   return(
     <div className="login-screen">
       {isLoading ? <LoadingSpinner /> : <></>}
 
-      <h2 className={confirmed ? 'sucess' : ''}> {mainMessage} </h2>
       {errorMessage && <div className="error-login">{errorMessage}</div>}
       
       {token===null && 
         <div>
+          <h2 className={confirmed ? 'sucess' : ''}> {mainMessage} </h2>
           {!confirmed && 
-            <form className="form" onSubmit={handleSubmitEmail} noValidate>
-              <input type="text" placeholder="Email" name="email" onChange={e => setEmai(e.target.value)} value={email}/>
+            <form className="form" onSubmit={handleSubmitEmail}>
+              <input type="text" placeholder="Email" name="email" onChange={e => setEmail(e.target.value)} value={email}/>
               <button type="submit" className="form-button">Enviar</button>
             </form>      
           }
@@ -106,10 +104,11 @@ function ResetPassword(){
       
       {token!=null && 
         <div>
+          <h2 className={confirmed ? 'sucess' : 'hide'}> {mainMessage} </h2>
           {!confirmed && 
             <form className="form" onSubmit={handleSubmitPassword} noValidate>
-              <input type="text" placeholder="Nova senha" name="new-password" onChange={e => setEmai(e.target.value)} value={email}/>
-              <input type="text" placeholder="Confirmar senha" onChange={e => e.target.value===newUserData.password ? setCheckPassword(true) : setCheckPassword(false)}/>
+              <input type="text" placeholder="Nova senha" name="new-password" onChange={e => setNewPassword(e.target.value)} value={newPassword}/>
+              <input type="text" placeholder="Confirmar senha"/>
               <button type="submit" className="form-button">Enviar</button>
             </form>      
           }
